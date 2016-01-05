@@ -1,9 +1,23 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config_release {
+            keyAlias 'releaseKey'
+            keyPassword '123456'
+            storePassword '123456'
+            storeFile file('key/releaseKey.jks')
+        }
+
+        config_debug {
+            keyAlias 'debugKey'
+            keyPassword '123456'
+            storePassword '123456'
+            storeFile file('key/debugKey.jks')
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "com.jacksen.multichannel"
         minSdkVersion 14
@@ -13,14 +27,40 @@ android {
     }
     buildTypes {
         release {
+            buildConfigField "String", "APP_TYPE", "release"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config_release
+            debuggable false
+            jniDebuggable false
+            zipAlignEnabled true
+            shrinkResources true //移除无效的resource文件，必须允许ProGuard才能生效
+        }
+        debug {
+            buildConfigField "String", "APP_TYPE", "debug"
+            signingConfig signingConfigs.config_debug
+        }
+    }
+    productFlavors {
+        flavor_1 {
+            applicationId 'com.jacksen.multichannel.release'
+            signingConfig signingConfigs.config_release
+            minSdkVersion 9
+            targetSdkVersion 15
+            versionCode 2
+            versionName '2.0.1'
+            manifestPlaceholders = [APP_NAME: "@string/app_name1"]
+        }
+        flavor_2 {
+            applicationId 'com.jacksen.multichannel.debug'
+            signingConfig signingConfigs.config_debug
+            manifestPlaceholders = [APP_NAME: "@string/app_name2"]
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
