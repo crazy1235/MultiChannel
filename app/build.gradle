@@ -18,16 +18,42 @@ android {
     }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
+
+
+    def versionPropsFile = file('version.properties')
+    def versionBuild
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        versionBuild = versionProps['VERSION_BUILD'].toInteger();
+    } else {
+        throw new GradleException("Could not read version.properties!")
+    }
+
+
+    def autoIncrementBuildNumber = {
+        if (versionPropsFile.canRead()) {
+            def Properties versionProps = new Properties();
+            versionProps.load(new FileInputStream(versionPropsFile))
+            versionBuild = versionProps['VERSION_BUILD'].toInteger() + 1
+            versionProps['VERSION_BUILD'] = versionBuild.toString()
+            versionProps.store(versionPropsFile.newWriter(), null)
+        } else {
+            throw new GradleException("Could not read version.properties!")
+        }
+    }
+
+
     defaultConfig {
         applicationId "com.jacksen.multichannel"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "1.0." + versionBuild
     }
     buildTypes {
         release {
-            buildConfigField "String", "APP_TYPE", "release"
+//            buildConfigField "String", "APP_TYPE", 'release'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config_release
@@ -37,7 +63,7 @@ android {
             shrinkResources true //移除无效的resource文件，必须允许ProGuard才能生效
         }
         debug {
-            buildConfigField "String", "APP_TYPE", "debug"
+//            buildConfigField "String", "APP_TYPE", 'debug'
             signingConfig signingConfigs.config_debug
         }
     }
@@ -56,6 +82,13 @@ android {
             signingConfig signingConfigs.config_debug
             manifestPlaceholders = [APP_NAME: "@string/app_name2"]
         }
+    }
+    assembleDebug << {
+        autoIncrementBuildNumber()
+    }
+
+    assembleRelease << {
+        autoIncrementBuildNumber()
     }
 }
 

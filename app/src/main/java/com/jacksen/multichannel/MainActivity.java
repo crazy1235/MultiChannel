@@ -1,5 +1,7 @@
 package com.jacksen.multichannel;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -34,24 +36,29 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         TextView textView = (TextView) findViewById(R.id.textView);
-        textView.setText("BuildConfig.APP_TYPE : " + BuildConfig.APP_TYPE);
+//        textView.setText("BuildConfig.APP_TYPE : " + BuildConfig.APP_TYPE);
+
+
+        TextView versionTv = (TextView) findViewById(R.id.app_version_tv);
+
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionTv.setText(packageInfo.versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
