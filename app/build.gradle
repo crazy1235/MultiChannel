@@ -16,8 +16,8 @@ android {
             storeFile file('key/debugKey.jks')
         }
     }
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 24
+    buildToolsVersion '24.0.2'
 
 
     def versionPropsFile = file('version.properties')
@@ -47,7 +47,7 @@ android {
     defaultConfig {
         applicationId "com.jacksen.multichannel"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0." + versionBuild
     }
@@ -56,7 +56,7 @@ android {
 //            buildConfigField "String", "APP_TYPE", 'release'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config_release
+//            signingConfig signingConfigs.config_release
             debuggable false
             jniDebuggable false
             zipAlignEnabled true
@@ -64,7 +64,7 @@ android {
         }
         debug {
 //            buildConfigField "String", "APP_TYPE", 'debug'
-            signingConfig signingConfigs.config_debug
+//            signingConfig signingConfigs.config_debug
         }
     }
     productFlavors {
@@ -95,6 +95,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
 }
