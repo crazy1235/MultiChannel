@@ -88,13 +88,27 @@ android {
             manifestPlaceholders = [APP_NAME: "@string/app_name2"]
         }
     }
-    assembleDebug << {
+    /*assembleDebug << {
         autoIncrementBuildNumber()
     }
 
     assembleRelease << {
         autoIncrementBuildNumber()
+    }*/
+
+    task printProperties << {
+        println project
+        println project.name
+        println project.buildDir
+        println project.buildFile
+        println project.version
+        println name
+        println buildDir
+        println buildFile
+        println path
     }
+
+//    printProperties.dependsOn(build)
 }
 
 dependencies {
